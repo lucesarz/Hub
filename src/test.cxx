@@ -18,40 +18,63 @@
 #include <include/hubDefs.h>
 #include <include/Hub.h>
 #include <include/MasterHub.h>
+#include <pthread.h>
+
 using namespace std;
     int
 main ( int argc, char *argv[] )
 {
-    //Let's declare me a Master and print some basic info
+    //declaring the master hub.
     MasterHub *Master = new MasterHub();
     Hub *Slave1;
     Slave1 = Master->CreateSlave();
+    pthread_t t[2];
+    pthread_create(&t[0],NULL,SendData,(void*)Slave1);
+    pthread_create(&t[1],NULL,MasterSend,(void*)Master);
+    pthread_join(&t[0],NULL);
+
     
-    printf("HId1 : %lx, HId2 : %lx\n",Master->GetHubId(),Slave1->GetHubId());
-    printf("Master's master is : %lx, Slave1's master is : %lx\n",Master->GetMasterId(),Slave1->GetMasterId());
-
-    //Now let's try the queue's a little bit and try the PrintQueue functions in Hub
-
-    HUBSig data0 = 0x45;
-    HUBSig data1 = 0x36;
-    HUBSig data2 = 0x16;
-    HUBSig rec0, rec1,rec2;
-
-    Slave1->SendSig(data0);
-    Slave1->SendSig(data1);
-    Slave1->SendSig(data2);
-    printf("test\n");
-    rec0 = Master->MasterRecSig(2);
-    rec1 = Master->MasterRecSig(2);
-    rec2 = Master->MasterRecSig(2);
-    printf("rec0 = 0x%lx, rec1 = 0x%lx, rec = 0x%lx\n",rec0,rec1,rec2);
-//GIT TEST COMMENT
-//ANOTHER TEST COMMENT    
-
-
     return 0;
 }	
 
+void* MasterRec(void*  master)
+{
+    master = (MasterHub*)master;
+    int i = 0;
+    while(running())
+    {
+        master->MasterRecData(i++);
+        if(i == 3)
+        {
+            i = 0;
+        }
+    }
+}
+
+void* SendData(void* slave)
+{
+    int t = 0;
+    slave = (Hub*)slave;
+    int array[1024];
+    for(int i = 0; i < 1024; i++)
+    {
+        array[i] = i + 1;
+    }
+    while(running)
+    {
+        slave->SendData(array[t])
+        if(t++ ==1023)
+        {
+            t =0;
+        }
+    }
+}
+
+bool running(void)
+{
+    //Looks unecessary but will change.
+    return true;
+}
 
 
 

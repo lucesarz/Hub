@@ -46,7 +46,7 @@ main ( int argc, char *argv[] )
     rec2 = Master->MasterRecSig(2);
     printf("rec0 = 0x%lx, rec1 = 0x%lx, rec = 0x%lx\n",rec0,rec1,rec2);
 //GIT TEST COMMENT
-    
+//ANOTHER TEST COMMENT    
 
 
     return 0;

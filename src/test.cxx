@@ -33,9 +33,9 @@ main ( int argc, char *argv[] )
     pthread_create(&t[1],NULL,MasterSend,(void*)Master);
     pthread_join(&t[0],NULL);
 
-    
+
     return 0;
-}	
+}
 
 void* MasterRec(void*  master)
 {
@@ -75,7 +75,7 @@ bool running(void)
     //Looks unecessary but will change.
     return true;
 }
-
+//TEST 
 
 
 

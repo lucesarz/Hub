@@ -19,12 +19,13 @@
 #include <include/Hub.h>
 #include <include/MasterHub.h>
 #include <pthread.h>
+#include <unistd.h>
 
 using namespace std;
 
-void* MasterRec(MasterHub* master);
-void* running();
-void* SendData(Hub* slave);
+void* MasterRec(void* master);
+bool running(void);
+void* SendData(void* slave);
 
 int main ( int argc, char *argv[] )
 {
@@ -33,18 +34,21 @@ int main ( int argc, char *argv[] )
     Hub *Slave1;
     Slave1 = Master->CreateSlave();
     pthread_t t[2];
-    pthread_create(&t[0],NULL,SendData, Slave1);
-    pthread_create(&t[1],NULL,MasterRec, Master);
+    pthread_create(&t[0],NULL,SendData, (void*)Slave1);
+    pthread_create(&t[1],NULL,MasterRec, (void*)Master);
+    printf("Threads started\n");
     pthread_join(t[0],NULL);
 
 
     return 0;
 }
 
-void* MasterRec(MasterHub*  master)
+void* MasterRec(void*  m)
 {
+    printf("Entered receive thread\n");
+    MasterHub* master;
     HUBSig data = 0;
-    master = (MasterHub*)master;
+    master = (MasterHub*)m;
     int i = 0;
     while(running())
     {
@@ -61,23 +65,22 @@ void* MasterRec(MasterHub*  master)
     }
 }
 
-void* SendData(Hub* slave)
+void* SendData(void* s)
 {
+    printf("Entered Send Thread\n");
+    Hub* slave;
     int t = 0;
-    slave = (Hub*)slave;
-    int array[1024];
-    struct timespec* t;
-    t->tv_sec = 0;
-    t->tv_nsec = 5;
+    slave = (Hub*)s;
+    HUBSig array[1024];
     for(int i = 0; i < 1024; i++)
     {
         array[i] = i + 1;
     }
     while(running)
     {
-        if(!slave->SendData(array[t]))
+        if(!slave->SendSig(array[t]))
         {
-            nanosleep(t,NULL);
+            usleep(1);
         }
         if(t++ ==1023)
         {

@@ -54,19 +54,24 @@ enum ErrorList
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+ *********************************************************************
+ * Define all HUBSigs here.  These are important.  Name them nicely.
+ *
+ *********************************************************************
+ */
+#define STARTEDTASK                 0x00000000
+#define PERFORMINGTASK              0x00000000
+#define COMPLETEDTASK               0x00000000
+#define RECEIVEDTASK                0x00000000
+#define STARTEDTASK                 0x00000000
+/**************************************************************
+ * add more as needed.
+#define STARTEDTASK                 0x00000000
+#define PERFORMINGTASK              0x00000000
+#define COMPLETEDTASK               0x00000000
+#define RECEIVEDTASK                0x00000000
+#define STARTEDTASK                 0x00000000
+**************************************************************/
 
 #endif

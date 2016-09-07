@@ -234,6 +234,10 @@ bool Hub::SendSData(HUBData data)
     if(pSendDataQ == NULL)
         //ERROR NOT REALLY SURE HOW IT GOT HERE
         return false;
+    if(pSendDataQ->isfull())
+    {
+        return false;
+    }
     return pStringQ->enqueue(data);
 }
 HUBSig Hub::RecSig()
